@@ -2,6 +2,8 @@ node_modules/
 .next/
 out/
 .vercel/
+.agents/
+skills-lock.json
 .env*
 !.env.example
 .vercel
