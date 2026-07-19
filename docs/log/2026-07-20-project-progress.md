@@ -164,6 +164,34 @@ GET /api/health/db
 - Indeed側の利用規約・アクセス制限・取得許可を確認して運用する。
 - CAPTCHAやアクセス制限の迂回は行わない。
 
+## 2026-07-20: 取得データのNeon保存
+
+- ブラウザ経由で`start=0`〜`start=330`の34ページを再取得。
+- `data-jk`で重複排除し、485件の求人を得た。
+- `jobs`へIndeed求人IDをキーにUPSERTした。
+- `search_runs`へ成功実行を記録した。
+
+### 保存後の状態
+
+```json
+{
+  "jobs": 485,
+  "unique_source_job_ids": 485,
+  "latest_search_run": {
+    "status": "success",
+    "result_count": 485,
+    "new_count": 485,
+    "updated_count": 0
+  }
+}
+```
+
+## 日次実行Skill
+
+- `.agents/skills/indeed-daily-collect/SKILL.md`を作成。
+- ブラウザ経由の取得、重複排除、停止条件、Neon保存手順を定義。
+- CAPTCHAやアクセス制限の迂回を禁止し、取得できた範囲のみを成功として報告する方針とした。
+
 ## 2026-07-20: スクレイパー取得可否ドライラン
 
 DBへは書き込まず、ブラウザセッション上で「エンジニア × 東京都」の検索結果をページングして確認した。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Indeed日次求人取得"
+  short_description: "ブラウザ経由でIndeed求人を取得してDBへ保存"
+  default_prompt: "Indeedのエンジニア・東京都求人をブラウザ経由で取得し、重複排除してNeon DBへ保存してください。"

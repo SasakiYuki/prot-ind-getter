@@ -3,6 +3,12 @@ node_modules/
 out/
 .vercel/
 .agents/
+!.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/**
+!.agents/skills/indeed-daily-collect/
+!.agents/skills/indeed-daily-collect/**
 skills-lock.json
 .env*
 !.env.example
