@@ -25,7 +25,7 @@ description: >-
    - `source_job_id`, `title`, `company_name`, `location`
    - `salary_text`, `employment_type`, `posted_text`
    - タグ配列とカードの元テキストを`raw_data`に保存する
-5. 取得したデータを`jobs`へUPSERTする。キーは`(source, source_job_id)`とし、再取得時は`last_seen_at`を更新する。
+5. 取得したデータを`jobs`へUPSERTする。キーは`(source, source_job_id)`とし、再取得時は内容が同じでも必ず`last_seen_at`を更新する。内容が変わった場合だけ`last_changed_at`を更新する。`content_hash`が同じという理由でUPDATE全体を省略してはならない。
 6. `search_runs`に結果件数、新規件数、更新件数、ステータスを記録する。
 
 ## 停止条件
