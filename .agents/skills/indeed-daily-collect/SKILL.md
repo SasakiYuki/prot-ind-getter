@@ -26,7 +26,9 @@ description: >-
    - `salary_text`, `employment_type`, `posted_text`
    - タグ配列とカードの元テキストを`raw_data`に保存する
 5. 取得したデータを`jobs`へUPSERTする。キーは`(source, source_job_id)`とし、再取得時は内容が同じでも必ず`last_seen_at`を更新する。内容が変わった場合だけ`last_changed_at`を更新する。`content_hash`が同じという理由でUPDATE全体を省略してはならない。
-6. `search_runs`に結果件数、新規件数、更新件数、ステータスを記録する。
+6. UPSERT後、今回の観測集合を`search_run_jobs`へ保存する。`logical_key`には正規化した企業名・タイトル・勤務地を使い、`source_job_id`とは別の同一案件候補キーとして扱う。
+7. 前回の成功実行と比較し、`data_jk`単位と`logical_key`単位の結果を`job_comparisons`へ保存する。
+8. `search_runs`に結果件数、新規件数、更新件数、ステータスを記録する。
 
 ## 停止条件
 
@@ -43,6 +45,7 @@ description: >-
 - プロキシ、並列大量アクセス、認証情報の収集を行わない。
 - DB接続文字列を出力・コミットしない。
 - ブラウザセッションがない場合は、取得不能として報告し、HTTP取得へ無断で切り替えない。
+- ブラウザやWebエージェントの切り替えを、アクセス制限・bot検知・CAPTCHAの回避目的で行わない。
 
 ## 確認
 

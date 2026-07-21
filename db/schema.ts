@@ -48,3 +48,38 @@ export const jobs = pgTable("jobs", {
 }, (table) => ({
   sourceJobUnique: unique("jobs_source_job_unique").on(table.source, table.sourceJobId)
 }));
+
+export const searchRunJobs = pgTable("search_run_jobs", {
+  id: serial("id").primaryKey(),
+  searchRunId: integer("search_run_id").notNull().references(() => searchRuns.id),
+  jobId: integer("job_id").references(() => jobs.id),
+  source: text("source").notNull(),
+  sourceJobId: text("source_job_id").notNull(),
+  title: text("title").notNull(),
+  companyName: text("company_name"),
+  location: text("location"),
+  salaryText: text("salary_text"),
+  employmentType: text("employment_type"),
+  logicalKey: text("logical_key").notNull(),
+  contentHash: text("content_hash"),
+  observedAt: timestamp("observed_at", { withTimezone: true }).notNull().defaultNow(),
+  rawData: jsonb("raw_data")
+}, (table) => ({
+  runJobUnique: unique("search_run_jobs_run_source_job_unique").on(table.searchRunId, table.source, table.sourceJobId)
+}));
+
+export const jobComparisons = pgTable("job_comparisons", {
+  id: serial("id").primaryKey(),
+  previousRunId: integer("previous_run_id").notNull().references(() => searchRuns.id),
+  currentRunId: integer("current_run_id").notNull().references(() => searchRuns.id),
+  comparisonType: text("comparison_type").notNull(),
+  previousCount: integer("previous_count").notNull().default(0),
+  currentCount: integer("current_count").notNull().default(0),
+  commonCount: integer("common_count").notNull().default(0),
+  previousOnlyCount: integer("previous_only_count").notNull().default(0),
+  currentOnlyCount: integer("current_only_count").notNull().default(0),
+  relistedCandidateCount: integer("relisted_candidate_count").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+}, (table) => ({
+  comparisonUnique: unique("job_comparisons_runs_type_unique").on(table.previousRunId, table.currentRunId, table.comparisonType)
+}));
